@@ -1,0 +1,224 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <title>FGM — Управление кинопроизводством</title>
+  <link rel="stylesheet" href="{% static 'css/globals.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/styleguide.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+</head>
+
+<body>
+  <div class="screen">
+    <header class="header">
+      <div class="logo">
+        <img class="vector" src="{% static 'img/image.svg' %}" alt="FGM Logo Icon" />
+        <div class="text-wrapper">FGM</div>
+      </div>
+      <button class="burger-menu" aria-label="Открыть меню"
+        onclick="document.querySelector('.mobile-nav').classList.toggle('active')">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <nav class="navbar" aria-label="Основная навигация">
+        <a href="#catalog" class="div">Каталог</a>
+        <a href="#pricing" class="div">Тарифы</a>
+        <a href="#sources" class="div">Источники</a>
+        <a href="#about" class="div">О нас</a>
+      </nav>
+      <a href="#login" class="text-wrapper-2">Войти</a>
+      <a href="#register" class="rectangle-2">
+        <span class="text-wrapper-3">Регистрация</span>
+      </a>
+      <nav class="mobile-nav" aria-label="Мобильная навигация">
+        <a href="#catalog">Каталог</a>
+        <a href="#pricing">Тарифы</a>
+        <a href="#sources">Источники</a>
+        <a href="#about">О нас</a>
+        <a href="#login">Войти</a>
+        <a href="#register" class="mobile-register">Регистрация</a>
+      </nav>
+    </header>
+
+    <section class="hero-section">
+      <img class="unsplash" src="{% static 'img/unsplash-4qgbmezb56c.png' %}" alt="Кинопроизводство" />
+      <h1 class="text-wrapper-28">КИНОПРОИЗВОДСТВО БОЛЬШЕ НЕ БУДЕТ ПРЕЖНИМ</h1>
+      <p class="p">
+        FGM — это инструмент управления кинопроизводством, который координирует рабочие процессы и объединяет все
+        производственные данные на одной облачной платформе, экономя драгоценное время, объединяя команды и воплощая
+        проект на экране. Эффективный и устойчивый.
+      </p>
+      <form class="email-form" aria-label="Форма подписки">
+        <div>
+          <input type="email" id="email-input-hero" class="email-input" placeholder="Рабочий e-mail" required
+            aria-required="true" />
+          <button type="submit" class="view">
+            <span class="div-2"><span class="span">Вперед</span><span class="text-wrapper-6">!</span></span>
+          </button>
+        </div>
+        <a href="#trust" class="component"><span class="text-wrapper-5">Почему нам доверяют?</span></a>
+      </form>
+    </section>
+
+    <section class="main-content">
+      <img class="image-5" src="{% static 'img/image-2.png' %}" alt="Визуализация платформы FGM" />
+      <h2 class="text-wrapper-29">FGM — создан для киностудий, где каждый день стоит миллионы</h2>
+      <p class="novacinestudios">
+        <span class="text-wrapper-8">Киностудия NovaCineStudios (Лос-Анджелес, 2010) живёт в ритме sci-fi, фэнтези и
+          экшн. Бюджеты — $50–150
+          млн. Риски — 85% идей отсеиваются, 45% бюджета уходит на съёмки, перерасходы до 40% из-за отсутствия
+          визуализации. Задержки из-за погоды, конфликтов актёров, сбоев CGI — это не форс-мажор.
+        </span>
+        <span class="text-wrapper-9">Это отсутствие контроля</span>
+        <span class="text-wrapper-8">.</span>
+      </p>
+      <p class="FGM-VFX-VFX">
+        FGM меняет правила игры:<br />
+        • Разработка: от идеи до сценария — с прогнозом успеха на основе исторических данных<br />
+        • Предпродакшн: утверждение бюджета → кастинг → локации → VFX-планирование<br />
+        • Продакшн: 100% видимость — кто, где, когда, какое оборудование<br />
+        • Постпродакшн: 4–7 месяцев монтажа и VFX — с итерациями и автоперераспределением<br />
+        • Маркетинг и дистрибуция: "streaming-first" — окно проката сокращено, релиз — вовремя
+      </p>
+      <h3 class="text-wrapper-4">Одна платформа. Один график. Ноль хаоса.</h3>
+    </section>
+
+    <section class="features-section">
+      <article class="view-2">
+        <div>
+          <h3 class="div-3">Снижение рисков и перерасходов</h3>
+          <p class="ROI-FGM-CGI">
+            Меньше рисков — выше ROI.<br />
+            Каждая задержка — это +10–25% к бюджету. FGM показывает:<br />
+            • Критический путь — где срыв = миллионы<br />
+            • Риски в реальном времени — погода, забастовки, CGI-сбои<br />
+            • Автоматическое перераспределение — при болезни, работа дублеру<br /><br />
+            Результат:<br />
+            → Снижение срывов сроков на 30% за год<br />
+            → Перерасходы — минус 15–40%<br />
+            → ROI растёт — инвесторы довольны
+          </p>
+        </div>
+        <img class="image" src="{% static 'img/image-3.png' %}" alt="Снижение рисков" />
+      </article>
+
+      <article class="view-3">
+        <div class="view-4">
+          <h3 class="text-wrapper-12">Все видят. Все знают. Никаких "а я не знал"</h3>
+          <p class="text-wrapper-13">
+            Продюсер, режиссёр, менеджер проектов, оператор, IT-специалист, съёмочная группа — каждый видит только
+            своё. Полный доступ — у ключевых ролей.
+          </p>
+        </div>
+        <img class="img" src="{% static 'img/image-4.png' %}" alt="Прозрачность процессов" />
+      </article>
+
+      <article class="view-5">
+        <div class="view-6">
+          <h3 class="text-wrapper-14">Интеграция без дублирования</h3>
+          <p class="jira-trello-google">
+            → Jira, Trello, Google Calendar<br />
+            → Импорт сценариев (Final Draft, PDF)<br />
+            → Экспорт отчётов (PDF, Excel)
+          </p>
+        </div>
+        <img class="png-transparent"
+          src="{% static 'img/png-transparent-computer-icons-pdf-document-file-format-others-text-rectangle-logo-thumbnail-1.png' %}"
+          alt="Интеграция с инструментами" />
+      </article>
+    </section>
+
+    <section class="trust-section" id="trust">
+      <h2 class="text-wrapper-16">Почему нам можно доверять?</h2>
+    </section>
+
+    <section class="product-section">
+      <article class="product-info">
+        <img class="image-2" src="{% static 'img/image-6.png' %}" alt="Продукт для киностудий" />
+        <div>
+          <h3 class="text-wrapper-18">Продукт для реальных киностудий</h3>
+          <p class="FGM-novacinestudios">
+            FGM создан на основе NovaCineStudios:<br />
+            • Год основания: 2010, Лос-Анджелес<br />
+            • Жанры: sci-fi, фэнтези, экшн<br />
+            • Доход: прокат, Netflix, Amazon Prime, мерчандайзинг<br />
+            • Рынок: $78,64 млрд к 2029<br />
+            • Вызовы: забастовки 2023, "streaming-first", VFX-зависимость
+          </p>
+          <p class="text-wrapper-19">Мы знаем ваш бизнес изнутри.</p>
+        </div>
+      </article>
+
+      <article class="tech-info">
+        <img class="image-3" src="{% static 'img/image-7.png' %}" alt="Технологии и безопасность" />
+        <div>
+          <h3 class="text-wrapper-22">Технологии и безопасность</h3>
+          <p class="web-react-node-js">
+            Web-приложение: React, Node.js, PostgreSQL<br />
+            Доступность: 99%, резервное копирование<br />
+            Безопасность: HTTPS, шифрование, роли по RACI<br />
+            Масштабируемость: 50+ пользователей, 1000+ задач<br />
+            Мобильная версия: iOS/Android — просмотр и обновление
+          </p>
+          <p class="text-wrapper-20">Ваше производство защищено.</p>
+        </div>
+      </article>
+
+      <article class="team-info">
+        <img class="image-4" src="{% static 'img/image-9.png' %}" alt="Команда и методология" />
+        <div>
+          <h3 class="text-wrapper-23">Команда и методология</h3>
+          <p class="scrum">
+            Разработка по Scrum — итерации каждые 2 недели<br />
+            Обратная связь от продюсеров и режиссёров<br />
+            Тестирование: модульное, интеграционное, приёмочное<br />
+            Внедрение: 6 месяцев с обучением<br />
+            Поддержка: 24/7, документация, видео-гайды
+          </p>
+          <p class="text-wrapper-21">От идеи до релиза — с нами.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="cta-section">
+      <h2 class="text-wrapper-17">Готовы снять следующий блокбастер без срывов и перерасходов?</h2>
+      <p class="FGM">Начните с FGM</p>
+      <h3 class="text-wrapper-26">Будущее уже здесь</h3>
+      <form class="e-mail" aria-label="Форма регистрации">
+        <input type="email" id="email-input-cta" class="email-input-cta" placeholder="Рабочий e-mail" required
+          aria-required="true" />
+        <button type="submit" class="div-wrapper">
+          <span class="div-2"><span class="span">Вперед</span><span class="text-wrapper-6">!</span></span>
+        </button>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-top">
+        <nav class="frame" aria-label="Навигация в подвале">
+          <a href="#catalog" class="div">Каталог</a>
+          <a href="#pricing" class="div">Тарифы</a>
+          <a href="#sources" class="div">Источники</a>
+          <a href="#about" class="div">О нас</a>
+        </nav>
+        <div class="social-icons">
+          <a href="#" aria-label="WhatsApp"><img src="{% static 'img/whatsapp.svg' %}" alt="WhatsApp" /></a>
+          <a href="#" aria-label="VK"><img src="{% static 'img/vk.svg' %}" alt="VK" /></a>
+          <a href="#" aria-label="Email"><img src="{% static 'img/mail.svg' %}" alt="Email" /></a>
+        </div>
+      </div>
+      <div class="logo-name">
+        <img class="vector-2" src="{% static 'img/vector.svg' %}" alt="FGM Logo Icon" />
+        <div class="text-wrapper-27">FGM</div>
+      </div>
+      <p class="text-wrapper-30">© 2025 Губайдуллин FGM. Все права защищены.</p>
+    </footer>
+  </div>
+</body>
+
+</html>
