@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <title>{{ title|capfirst }}</title>
+  <link rel="stylesheet" href="{% static 'main/css/globals.css' %}" />
+  <link rel="stylesheet" href="{% static 'main/css/styleguide.css' %}" />
+  <link rel="stylesheet" href="{% static 'main/css/style.css' %}" />
+</head>
+
+<body>
+  <div class="screen">
+    {% include 'includes/header.html' %}
+
+    {% block content %}
+    {% endblock %}
+
+    <footer class="footer">
+      <div class="footer-top">
+        <nav class="frame" aria-label="Навигация в подвале">
+          <a href="#catalog" class="div">Каталог</a>
+          <a href="#pricing" class="div">Тарифы</a>
+          <a href="#sources" class="div">Источники</a>
+          <a href="#about" class="div">О нас</a>
+        </nav>
+        <div class="social-icons">
+          <a href="#" aria-label="WhatsApp"><img src="{% static 'main/img/whatsapp.svg' %}" alt="WhatsApp" /></a>
+          <a href="#" aria-label="VK"><img src="{% static 'main/img/vk.svg' %}" alt="VK" /></a>
+          <a href="#" aria-label="Email"><img src="{% static 'main/img/mail.svg' %}" alt="Email" /></a>
+        </div>
+      </div>
+      <div class="logo-name">
+        <img class="vector-2" src="{% static 'main/img/vector.svg' %}" alt="FGM Logo Icon" />
+        <div class="text-wrapper-27">FGM</div>
+      </div>
+      <p class="text-wrapper-30">© 2025 Губайдуллин FGM. Все права защищены.</p>
+    </footer>
+  </div>
+</body>
+
+</html>

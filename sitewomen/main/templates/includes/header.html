@@ -1,0 +1,27 @@
+{% load static %}
+
+<header class="header">
+  <div class="logo">
+    <img class="vector" src="{% static 'main/img/image.svg' %}" alt="FGM Logo Icon" />
+    <a href="{% url 'home' %}"><div class="text-wrapper">{{ title|slice:":3" }}</div>
+  </div>
+  <button class="burger-menu" aria-label="Открыть меню"
+    onclick="document.querySelector('.mobile-nav').classList.toggle('active')">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+  <nav class="navbar" aria-label="Основная навигация">
+    {% load fgm_tags %}
+    {% show_menu %}
+  </nav>
+  <a href="{% url 'login' %}" class="text-wrapper-2">Войти</a>
+  <a href="#register" class="rectangle-2">
+    <span class="text-wrapper-3">Регистрация</span>
+  </a>
+  <nav class="mobile-nav" aria-label="Мобильная навигация">
+    {% show_menu %}
+    <a href="{% url 'login' %}">Войти</a>
+    <a href="#register" class="mobile-register">Регистрация</a>
+  </nav>
+</header>
