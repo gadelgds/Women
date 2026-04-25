@@ -1,14 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse
+from main.models import Movie
 
 def index(request):
-    posts = [
-        {'id': 1, 'title': 'Новый проект в разработке', 'content': 'Мы рады объявить о начале работы над новым блокбастером. Съемки начнутся в следующем квартале с участием звездного актерского состава.', 'is_published': True},
-        {'id': 2, 'title': 'Обновление платформы FGM', 'content': 'Вышла новая версия системы управления проектами. Теперь доступны расширенные возможности для координации съемочных групп и автоматизации рабочих процессов.', 'is_published': True},
-        {'id': 3, 'title': 'Внутренний тест', 'content': 'Этот пост находится в разработке и не должен быть виден публично. Тестирование новых функций продолжается.', 'is_published': False},
-        {'id': 4, 'title': 'Успешное завершение проекта', 'content': 'Наша команда успешно завершила работу над фильмом, который выйдет в прокат этим летом. Благодарим всех участников за профессионализм и слаженную работу.', 'is_published': True},
-    ]
+    posts = Movie.published.all()
     
     data = {
         'title': 'FGM — Управление кинопроизводством',
@@ -33,3 +29,25 @@ def page_not_found(request, exception):
 
 def login(request):
     return HttpResponse('<h1>Страница логина</h1>')
+
+def about(request):
+    data = {
+        'title': 'О нас — FGM'
+    }
+    return render(request, 'main/about.html', context=data)
+
+def sources(request):
+    data = {
+        'title': 'Источники — FGM'
+    }
+    return render(request, 'main/sources.html', context=data)
+
+
+def show_movie(request, movie_slug):
+    movie = get_object_or_404(Movie, slug=movie_slug)
+    
+    data = {
+        'title': movie.title,
+        'movie': movie
+    }
+    return render(request, 'main/movie_detail.html', context=data)

@@ -29,7 +29,8 @@
       {% if p.is_published %}
       <article class="post-item">
         <h2 class="text-wrapper-18">{{ p.title }}</h2>
-        <p class="text-wrapper-13">{{ p.content }}</p>
+        <p class="text-wrapper-13">{{ p.content|truncatewords:30 }}</p>
+        <a href="{{ p.get_absolute_url }}" class="btn-read">Читать далее →</a>
       </article>
       {% endif %}
     {% endfor %}

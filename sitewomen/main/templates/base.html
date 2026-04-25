@@ -22,10 +22,10 @@
     <footer class="footer">
       <div class="footer-top">
         <nav class="frame" aria-label="Навигация в подвале">
-          <a href="#catalog" class="div">Каталог</a>
-          <a href="#pricing" class="div">Тарифы</a>
-          <a href="#sources" class="div">Источники</a>
-          <a href="#about" class="div">О нас</a>
+          <a href="{% url 'home' %}" class="div">Каталог</a>
+          <a href="{% url 'home' %}" class="div">Тарифы</a>
+          <a href="{% url 'sources' %}" class="div">Источники</a>
+          <a href="{% url 'about' %}" class="div">О нас</a>
         </nav>
         <div class="social-icons">
           <a href="#" aria-label="WhatsApp"><img src="{% static 'main/img/whatsapp.svg' %}" alt="WhatsApp" /></a>

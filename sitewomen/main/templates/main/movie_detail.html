@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="movie-detail">
+    <article class="movie-content">
+        <h1>{{ movie.title }}</h1>
+        
+        <div class="movie-meta">
+            <p class="movie-date">Дата создания: {{ movie.time_create|date:"d.m.Y H:i" }}</p>
+            <p class="movie-updated">Обновлено: {{ movie.time_update|date:"d.m.Y H:i" }}</p>
+        </div>
+        
+        <div class="movie-description">
+            {{ movie.content|linebreaks }}
+        </div>
+        
+        <div class="movie-actions">
+            <a href="{% url 'home' %}" class="btn-back">← Вернуться к списку</a>
+        </div>
+    </article>
+</section>
+{% endblock %}
