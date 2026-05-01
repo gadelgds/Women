@@ -6,6 +6,17 @@
     <article class="movie-content">
         <h1>{{ movie.title }}</h1>
         
+        {% with movie.tags.all as tags %}
+          {% if tags %}
+          <p class="movie-tags">
+            Теги: 
+            {% for tag in tags %}
+              <a href="{{ tag.get_absolute_url }}" class="tag-badge">#{{ tag.tag }}</a>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+          {% endif %}
+        {% endwith %}
+        
         <div class="movie-meta">
             <p class="movie-date">Дата создания: {{ movie.time_create|date:"d.m.Y H:i" }}</p>
             <p class="movie-updated">Обновлено: {{ movie.time_update|date:"d.m.Y H:i" }}</p>
@@ -14,6 +25,17 @@
         <div class="movie-description">
             {{ movie.content|linebreaks }}
         </div>
+        
+        {% if movie.specs %}
+        <div class="technical-specs">
+            <h2>Технические характеристики</h2>
+            <ul class="specs-list">
+                <li><strong>Разрешение:</strong> {{ movie.specs.resolution }}</li>
+                <li><strong>Камера:</strong> {{ movie.specs.camera }}</li>
+                <li><strong>Цветовое пространство:</strong> {{ movie.specs.color_space }}</li>
+            </ul>
+        </div>
+        {% endif %}
         
         <div class="movie-actions">
             <a href="{% url 'home' %}" class="btn-back">← Вернуться к списку</a>

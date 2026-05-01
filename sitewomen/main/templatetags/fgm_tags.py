@@ -1,4 +1,5 @@
 from django import template
+from main.models import Category
 
 register = template.Library()
 
@@ -11,3 +12,8 @@ def show_menu():
         {'title': 'О нас', 'url_name': 'about'},
     ]
     return {'menu': menu}
+
+@register.inclusion_tag('includes/categories.html')
+def show_categories(cat_selected=0):
+    cats = Category.objects.all()
+    return {'cats': cats, 'cat_selected': cat_selected}

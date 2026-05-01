@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse
-from main.models import Movie
+from main.models import Movie, Category, MovieTag
 
 def index(request):
     posts = Movie.published.all()
     
     data = {
         'title': 'FGM — Управление кинопроизводством',
-        'posts': posts
+        'posts': posts,
+        'cat_selected': 0
     }
     return render(request, 'main/index.html', context=data)
 
@@ -51,3 +52,27 @@ def show_movie(request, movie_slug):
         'movie': movie
     }
     return render(request, 'main/movie_detail.html', context=data)
+
+
+def show_category(request, cat_slug):
+    category = get_object_or_404(Category, slug=cat_slug)
+    posts = Movie.published.filter(cat_id=category.pk)
+    
+    data = {
+        'title': category.name,
+        'posts': posts,
+        'cat_selected': category.pk
+    }
+    return render(request, 'main/index.html', context=data)
+
+
+def show_tag_postlist(request, tag_slug):
+    tag = get_object_or_404(MovieTag, slug=tag_slug)
+    posts = tag.movies.filter(is_published=Movie.Status.PUBLISHED)
+    
+    data = {
+        'title': tag.tag,
+        'posts': posts,
+        'cat_selected': None
+    }
+    return render(request, 'main/index.html', context=data)

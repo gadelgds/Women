@@ -1,0 +1,12 @@
+<nav class="categories-menu" aria-label="Меню категорий">
+  <ul class="categories-list">
+    <li class="category-item {% if cat_selected == 0 %}active{% endif %}">
+      <a href="{% url 'home' %}">Все категории</a>
+    </li>
+    {% for cat in cats %}
+    <li class="category-item {% if cat.pk == cat_selected %}active{% endif %}">
+      <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</nav>

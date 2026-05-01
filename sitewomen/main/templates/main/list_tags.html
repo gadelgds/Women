@@ -1,0 +1,12 @@
+<aside class="tags-sidebar">
+  <h3 class="tags-title">Теги фильмов</h3>
+  <ul class="tags-list">
+    {% for tag in tags %}
+    <li class="tag-item">
+      <a href="{{ tag.get_absolute_url }}" class="tag-link">#{{ tag.tag }}</a>
+    </li>
+    {% empty %}
+    <li class="no-tags">Теги отсутствуют</li>
+    {% endfor %}
+  </ul>
+</aside>

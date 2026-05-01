@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Movie
+from .models import Movie, TechnicalSpecs
 
 
 @admin.register(Movie)
@@ -9,3 +9,10 @@ class MovieAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')
     list_editable = ('is_published',)
     ordering = ('-time_create',)
+
+
+@admin.register(TechnicalSpecs)
+class TechnicalSpecsAdmin(admin.ModelAdmin):
+    list_display = ('movie', 'resolution', 'camera', 'color_space')
+    search_fields = ('movie__title', 'camera')
+    list_filter = ('resolution',)
