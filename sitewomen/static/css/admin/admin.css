@@ -1,0 +1,14 @@
+/* FGM Admin Color Scheme */
+
+#header {
+    background-color: #3F4137;
+}
+
+.module h2,
+.module caption {
+    background-color: #3F4137;
+}
+
+div.breadcrumbs {
+    background-color: #6A6E5D;
+}

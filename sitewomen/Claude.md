@@ -1119,3 +1119,215 @@ FGM - это современное Django-приложение для упра�
 ✅ **Переиспользование кода** - DRY принцип  
 
 Проект готов к дальнейшему развитию и масштабированию! 🎬
+---
+
+### Версия 2.1 - Настройка административной панели (Май 2026)
+
+#### Локализация интерфейса
+- `LANGUAGE_CODE = "ru-RU"` в settings.py
+- Все модели имеют `verbose_name` и `verbose_name_plural` на русском языке
+
+#### Глобальные заголовки админ-панели (urls.py)
+```python
+admin.site.site_header = "FGM: Система управления кинопроизводством"
+admin.site.index_title = "Панель продюсера и инженера"
+```
+
+#### Настройка приложения (apps.py)
+```python
+class MainConfig(AppConfig):
+    verbose_name = "Управление контентом"
+```
+
+#### Django Debug Toolbar
+- Добавлен `"debug_toolbar"` в INSTALLED_APPS
+- `DebugToolbarMiddleware` добавлен сразу после `SessionMiddleware`
+- `INTERNAL_IPS = ["127.0.0.1"]`
+- URL `__debug__/` подключается при `settings.DEBUG`
+
+#### CategoryAdmin - расширенная конфигурация
+```python
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "slug")
+    list_display_links = ("id", "name")
+    prepopulated_fields = dict(slug=["name"])
+    search_fields = ("name",)
+```
+
+#### MovieTagAdmin
+```python
+@admin.register(MovieTag)
+class MovieTagAdmin(admin.ModelAdmin):
+    list_display = ("tag", "slug")
+    prepopulated_fields = dict(slug=["tag"])
+    search_fields = ("tag",)
+```
+
+#### TechnicalSpecsInline
+- StackedInline для редактирования техпаспорта на странице фильма
+- `extra = 0` - не показывать пустые формы
+
+#### TechnicalSpecsFilter - кастомный фильтр
+```python
+class TechnicalSpecsFilter(admin.SimpleListFilter):
+    title = "Наличие техпаспорта"
+    parameter_name = "tech_status"
+    
+    def lookups(self, request, model_admin):
+        return [("filled", "Заполнен"), ("empty", "Пусто")]
+    
+    def queryset(self, request, queryset):
+        if self.value() == "filled":
+            return queryset.filter(specs__isnull=False)
+        if self.value() == "empty":
+            return queryset.filter(specs__isnull=True)
+```
+
+#### MovieAdmin - полная конфигурация
+```python
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
+    # Отображение в списке
+    list_display = ("title", "cat", "brief_info", "time_create", "is_published")
+    list_display_links = ("title",)
+    list_editable = ("is_published", "cat")
+    
+    # Поиск и фильтрация
+    search_fields = ("title__startswith", "cat__name")
+    list_filter = (TechnicalSpecsFilter, "is_published", "cat", "time_create")
+    
+    # Форма редактирования
+    fields = ("title", "slug", "cat", "content", "tags")
+    prepopulated_fields = dict(slug=["title"])
+    filter_horizontal = ("tags",)
+    
+    # Inline и пагинация
+    inlines = [TechnicalSpecsInline]
+    ordering = ["-time_create", "title"]
+    list_per_page = 10
+    
+    # Аналитическое поле
+    @admin.display(description="Объем описания")
+    def brief_info(self, obj):
+        return f"Описание: {len(obj.content)} симв."
+    
+    # Массовые действия
+    @admin.action(description="Опубликовать выбранные фильмы")
+    def set_published(self, request, queryset):
+        count = queryset.update(is_published=Movie.Status.PUBLISHED)
+        self.message_user(request, f"Опубликовано {count} записей.")
+    
+    @admin.action(description="Снять с публикации выбранные проекты")
+    def set_draft(self, request, queryset):
+        count = queryset.update(is_published=Movie.Status.DRAFT)
+        self.message_user(request, f"Снято с публикации {count} записей.", level=messages.WARNING)
+    
+    actions = ["set_published", "set_draft"]
+```
+
+#### TechnicalSpecsAdmin
+```python
+@admin.register(TechnicalSpecs)
+class TechnicalSpecsAdmin(admin.ModelAdmin):
+    list_display = ("movie", "resolution", "camera", "color_space")
+    search_fields = ("movie__title", "camera")
+    list_filter = ("resolution",)
+```
+
+#### Ключевые возможности админ-панели
+
+| Функция | Описание |
+|---------|----------|
+| Поиск по названию | `title__startswith` - поиск по началу строки |
+| Поиск по категории | `cat__name` - поиск по связанному полю |
+| Фильтр по техпаспорту | Кастомный TechnicalSpecsFilter |
+| Горизонтальный селектор тегов | `filter_horizontal` для ManyToMany |
+| Автозаполнение slug | Из поля title |
+| Массовая публикация | Action `set_published` |
+| Массовое снятие | Action `set_draft` с warning |
+| Аналитика описания | Поле `brief_info` с длиной текста |
+| Inline техпаспорт | Редактирование на странице фильма |
+
+#### Измененные файлы
+
+| Файл | Изменения |
+|------|-----------|
+| `sitewomen/settings.py` | LANGUAGE_CODE, debug_toolbar, INTERNAL_IPS |
+| `sitewomen/urls.py` | Глобальные заголовки, маршрут debug_toolbar |
+| `main/apps.py` | verbose_name приложения |
+| `main/admin.py` | Полная переработка всех Admin классов |
+
+
+#### Кастомизация внешнего вида админки
+
+**Структура файлов:**
+```
+sitewomen/
+├── templates/
+│   └── admin/
+│       └── base_site.html    # Кастомный шаблон админки
+└── static/
+    └── css/
+        └── admin/
+            └── admin.css     # Фирменные стили
+```
+
+**templates/admin/base_site.html:**
+```django
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}FGM | Панель управления{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">FGM Production Hub</h1>
+{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/admin/admin.css' %}">
+{% endblock %}
+```
+
+**static/css/admin/admin.css:**
+```css
+/* FGM Admin Color Scheme */
+
+#header {
+    background-color: #3F4137;  /* Темно-оливковый */
+}
+
+.module h2,
+.module caption {
+    background-color: #3F4137;
+}
+
+div.breadcrumbs {
+    background-color: #6A6E5D;  /* Серый */
+}
+```
+
+**Обновления settings.py:**
+```python
+TEMPLATES = [
+    {
+        "DIRS": [BASE_DIR / "templates"],  # Путь к кастомным шаблонам
+        ...
+    },
+]
+
+STATICFILES_DIRS = [BASE_DIR / "static"]  # Путь к кастомным стилям
+```
+
+**Фирменная палитра:**
+| Элемент | Цвет | HEX |
+|---------|------|-----|
+| Шапка (#header) | Темно-оливковый | #3F4137 |
+| Заголовки блоков | Темно-оливковый | #3F4137 |
+| Хлебные крошки | Серый | #6A6E5D |
+
+**Новые файлы:**
+| Файл | Назначение |
+|------|------------|
+| `templates/admin/base_site.html` | Кастомный шаблон админки |
+| `static/css/admin/admin.css` | Фирменные стили админки |
