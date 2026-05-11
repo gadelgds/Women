@@ -1,0 +1,10 @@
+# Django Framework
+Django==5.2.8
+
+# Django Extensions (shell_plus и другие утилиты)
+django-extensions==4.1
+
+# Django Debug Toolbar (панель отладки)
+django-debug-toolbar==4.4.6
+
+pillow==12.2.0

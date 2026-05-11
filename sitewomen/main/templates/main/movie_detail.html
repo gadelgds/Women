@@ -6,6 +6,12 @@
     <article class="movie-content">
         <h1>{{ movie.title }}</h1>
         
+        {% if movie.photo %}
+        <div class="movie-poster">
+            <img src="{{ movie.photo.url }}" class="img-article-left" alt="{{ movie.title }}">
+        </div>
+        {% endif %}
+        
         {% with movie.tags.all as tags %}
           {% if tags %}
           <p class="movie-tags">

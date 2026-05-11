@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from PIL import Image
+import os
 
 
 class Category(models.Model):
@@ -52,6 +54,7 @@ class Movie(models.Model):
     is_published = models.BooleanField(default=Status.PUBLISHED, choices=Status.choices, verbose_name="Статус")
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='movies', verbose_name="Категория")
     tags = models.ManyToManyField('MovieTag', related_name='movies', blank=True, verbose_name="Теги")
+    photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None, blank=True, null=True, verbose_name="Постер фильма")
     
     objects = models.Manager()  # Стандартный менеджер
     published = PublishedManager()  # Кастомный менеджер для опубликованных
@@ -61,6 +64,20 @@ class Movie(models.Model):
 
     def get_absolute_url(self):
         return reverse('movie_detail', kwargs={'movie_slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        """Переопределение save для автоматического изменения размера изображения"""
+        super().save(*args, **kwargs)
+        
+        if self.photo:
+            img_path = self.photo.path
+            if os.path.exists(img_path):
+                with Image.open(img_path) as img:
+                    max_size = (800, 800)
+                    
+                    if img.height > max_size[0] or img.width > max_size[1]:
+                        img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                        img.save(img_path, optimize=True, quality=85)
 
     class Meta:
         verbose_name = "Кинопроект"

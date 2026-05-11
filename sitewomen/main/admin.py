@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.utils.safestring import mark_safe
 from .models import Movie, Category, MovieTag, TechnicalSpecs
 
 
@@ -45,10 +46,10 @@ class TechnicalSpecsInline(admin.StackedInline):
 
 @admin.register(Movie)
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ("title", "cat", "brief_info", "time_create", "is_published")
+    list_display = ("post_photo", "title", "cat", "brief_info", "time_create", "is_published")
     list_display_links = ("title",)
     list_editable = ("is_published", "cat")
-    fields = ("title", "slug", "cat", "content", "tags")
+    fields = ("title", "slug", "cat", "content", "tags", "photo")
     search_fields = ("title__startswith", "cat__name")
     list_filter = (TechnicalSpecsFilter, "is_published", "cat", "time_create")
     prepopulated_fields = dict(slug=["title"])
@@ -56,6 +57,14 @@ class MovieAdmin(admin.ModelAdmin):
     inlines = [TechnicalSpecsInline]
     ordering = ["-time_create", "title"]
     list_per_page = 10
+    readonly_fields = ("post_photo",)
+
+    @admin.display(description="Постер")
+    def post_photo(self, obj):
+        """Отображение миниатюры постера в админ-панели"""
+        if obj.photo:
+            return mark_safe(f"<img src='{obj.photo.url}' width=50>")
+        return "Нет постера"
 
     @admin.display(description="Объем описания")
     def brief_info(self, obj):

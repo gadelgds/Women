@@ -28,6 +28,11 @@
     {% for p in posts %}
       {% if p.is_published %}
       <article class="post-item">
+        {% if p.photo %}
+        <div class="movie-poster">
+            <img src="{{ p.photo.url }}" class="img-article-left" alt="{{ p.title }}">
+        </div>
+        {% endif %}
         <p class="category-badge">Категория: {{ p.cat.name }}</p>
         <p class="movie-updated">Обновлено: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
         <h2 class="text-wrapper-18">{{ p.title }}</h2>

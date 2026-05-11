@@ -2107,3 +2107,30 @@ html {
 .post-item h2 {
   margin-top: 0;
 }
+
+.form-input { width: 100%; padding: 5px; border: 1px solid #ccc; }
+
+.form-error { color: red; font-size: 0.9em; margin-top: 5px; }
+
+.form-label { font-weight: bold; display: block; margin-bottom: 5px; }
+
+/* Общий класс для изображений в статьях */
+.img-article-left {
+    max-width: 300px; /* Ограничиваем ширину (подберите под ваш макет) */
+    height: auto;      /* Сохраняем пропорции */
+    float: left;       /* Обтекание текстом, если нужно */
+    margin-right: 15px;
+    border-radius: 8px; /* Немного скруглим углы для стиля FGM */
+    object-fit: cover; /* Чтобы изображение заполняло область без искажений */
+}
+
+/* Миниатюры для списка на главной (Работа 50) */
+.thumb {
+    width: 200px;      /* Фиксированная ширина для сетки */
+    height: 250px;     /* Фиксированная высота */
+    object-fit: cover; /* Обрезает лишнее, сохраняя центр кадра */
+}
+
+
+
+
