@@ -1626,3 +1626,42 @@ FGM - это современное Django-приложение для упра�
 #### Шаблоны
 - В `movie_detail.html` реализована проверка прав доступа через коллекцию `perms`. Ссылка на редактирование оборачивается в условие `{% if perms.main.change_movie %}`.
 
+---
+
+### Версия 2.5 - Интеграция Яндекс Карт на страницу "Контакты"
+
+#### Настройки (settings.py)
+- Добавлен API-ключ: `YANDEX_MAPS_API_KEY`.
+- Добавлены координаты студии: `STUDIO_COORDINATES`.
+
+#### Представления и маршруты (Views & URLs)
+- Добавлен маршрут `contact/` в `main/urls.py`.
+- Создано представление `contact` в `main/views.py`, передающее `api_key` и `coords` в контекст шаблона.
+
+#### Шаблоны
+- Создан шаблон `main/contact.html`, наследующий `base.html`.
+- Интегрирован скрипт API Яндекс Карт: `<script src="https://api-maps.yandex.ru/2.1/?apikey={{ api_key }}&lang=ru_RU"></script>`.
+- Реализована инициализация карты (`ymaps.ready()`) с центрированием на координатах студии.
+- На карту добавлена метка `ymaps.Placemark` с текстом "FGM Production Hub".
+- Обновлено главное меню (`main/utils.py` и `main/templatetags/fgm_tags.py`) — добавлен пункт "Контакты".
+
+---
+
+### Версия 2.6 - ИИ-Ассистент продюсера (OpenRouter)
+
+#### Сервисный слой (main/services.py)
+- Создан новый модуль для внешней бизнес-логики.
+- Реализована функция `get_ai_response(prompt)`, выполняющая POST-запрос к API OpenRouter (`https://openrouter.ai/api/v1/chat/completions`).
+- Заголовки включают `Authorization: Bearer <key>` из `settings.OPENROUTER_API_KEY` и `HTTP-Referer`.
+- Настроена обработка исключений подключения через блок `try/except`.
+
+#### Формы (main/forms.py)
+- Добавлена форма `AIAssistantForm` с текстовым полем (`forms.Textarea`) для ввода запроса продюсером.
+
+#### Представления и маршруты
+- В `main/views.py` реализовано классовое представление `AIAssistantView(LoginRequiredMixin, FormView)`. Оно защищено от неавторизованного доступа и в методе `form_valid` обращается к сервисному слою. Результат (ответ ИИ) передается в контекст.
+- Добавлен маршрут `ai-assistant/` в `main/urls.py` (`name="ai_assistant"`).
+
+#### Шаблон
+- Создан новый шаблон `main/ai_assistant.html`. Вывод содержит поле формы и блок цитаты (`<blockquote>`) для форматированного отображения ответа ассистента.
+

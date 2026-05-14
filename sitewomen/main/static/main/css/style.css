@@ -2026,87 +2026,9 @@ html {
 }
 
 
-/* Movie Detail Page Styles */
-.movie-detail {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
-}
+/* Duplicated movie detail and btn-read styles removed */
 
-.movie-content h1 {
-  font-size: 2.5rem;
-  color: #1a1a1a;
-  margin-bottom: 20px;
-  font-weight: 700;
-}
-
-.movie-meta {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
-}
-
-.movie-meta p {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
-}
-
-.movie-description {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #333;
-  margin-bottom: 40px;
-}
-
-.movie-actions {
-  margin-top: 40px;
-}
-
-.btn-back {
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  font-weight: 500;
-}
-
-.btn-back:hover {
-  background-color: #0056b3;
-}
-
-/* Read More Button on Index Page */
-.btn-read {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
-  font-weight: 500;
-}
-
-.btn-read:hover {
-  background-color: #218838;
-}
-
-.post-item {
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.post-item h2 {
-  margin-top: 0;
-}
+/* old post item styles removed */
 
 .form-input { width: 100%; padding: 5px; border: 1px solid #ccc; }
 
@@ -2130,6 +2052,87 @@ html {
     height: 250px;     /* Фиксированная высота */
     object-fit: cover; /* Обрезает лишнее, сохраняя центр кадра */
 }
+
+/* ========================================
+   GLOBAL SIDEBAR MENUS (Categories & Tags)
+   ======================================== */
+.menus-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 30px 45px;
+  background-color: #0d0f12; /* Dark background matching header vibe */
+  border-bottom: 1px solid #1f2328;
+}
+
+.categories-sidebar,
+.tags-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.categories-title,
+.tags-title {
+  font-family: var(--desktop-h3-font-family, "Montserrat", sans-serif);
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.categories-list,
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item,
+.tag-item {
+  display: inline-block;
+}
+
+.category-link,
+.tag-link,
+.category-item.selected {
+  display: block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background-color: #1f2328;
+  color: #a0a6b1;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.category-link:hover,
+.tag-link:hover {
+  background-color: #2c323a;
+  color: #ffffff;
+  border-color: #3f4551;
+}
+
+.category-item.selected {
+  background-color: #28a745; /* FGM green brand color */
+  color: #ffffff;
+  border-color: #218838;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.4);
+}
+
+.no-tags {
+  color: #666;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
 
 
 

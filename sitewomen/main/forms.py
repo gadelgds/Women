@@ -41,3 +41,9 @@ class UploadFileForm(forms.Form):
     """Форма для загрузки файлов изображений"""
     
     file = forms.ImageField(label='Изображение для проекта')
+
+class AIAssistantForm(forms.Form):
+    prompt = forms.CharField(
+        label="Запрос к ИИ",
+        widget=forms.Textarea(attrs={"class": "form-input", "rows": 5, "placeholder": "Введите ваш запрос..."})
+    )

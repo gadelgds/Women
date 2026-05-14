@@ -1,7 +1,12 @@
 from django.urls import path, re_path, register_converter
 from main import views
 from main.converters import FourDigitYearConverter
-register_converter(FourDigitYearConverter, 'year4')
+
+try:
+    register_converter(FourDigitYearConverter, 'year4')
+except ValueError:
+    pass
+
 urlpatterns = [
 path('основа/', views.index, name='home'),
 path('о-нас/', views.about, name='about'),
@@ -9,9 +14,11 @@ path('источники/', views.sources, name='sources'),
 path('movie/<slug:movie_slug>/', views.show_movie, name='movie_detail'),
 path('category/<slug:cat_slug>/', views.show_category, name='category'),
 path('tag/<slug:tag_slug>/', views.show_tag_postlist, name='tag'),
+path('contact/', views.contact, name='contact'),
 path('cats/<int:cat_id>/', views.categories, name='cats_id'),
 path('cats/<slug:cat_slug>/', views.categories_by_slug, name='cats_slug'),
 path('archive/<year4:year>/', views.archive, name='archive_year'),
 path('login/', views.login, name='login'),
 path('add/', views.AddPage.as_view(), name='addpage'),
+path('ai-assistant/', views.AIAssistantView.as_view(), name='ai_assistant'),
 ]

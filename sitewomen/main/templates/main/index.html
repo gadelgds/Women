@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load main_tags fgm_tags %}
 
 {% block content %}
 <section class="hero-section">
@@ -24,6 +25,14 @@
   <img class="image-5" src="{% static 'main/img/image-2.png' %}" alt="Визуализация платформы FGM" />
   <h2 class="text-wrapper-29">FGM — создан для киностудий, где каждый день стоит миллионы</h2>
   
+  <div class="menus-container">
+    <!-- Динамическое меню категорий -->
+    {% show_categories cat_selected %}
+
+    <!-- Динамическое меню тегов -->
+    {% show_all_tags %}
+  </div>
+
   <div class="posts-section">
     {% for p in posts %}
       {% if p.is_published %}

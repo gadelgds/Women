@@ -8,3 +8,5 @@ django-extensions==4.1
 django-debug-toolbar==4.4.6
 
 pillow==12.2.0
+
+requests==2.34.1

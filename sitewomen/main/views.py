@@ -3,9 +3,11 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, FormView
+from django.conf import settings
 from main.models import Movie, Category, MovieTag
-from main.forms import AddMovieForm, UploadFileForm
+from main.forms import AddMovieForm, UploadFileForm, AIAssistantForm
+from main.services import get_ai_response
 
 
 def index(request):
@@ -57,6 +59,14 @@ def sources(request):
         'title': 'Источники — FGM'
     }
     return render(request, 'main/sources.html', context=data)
+
+def contact(request):
+    data = {
+        "title": "Контакты — FGM",
+        "api_key": settings.YANDEX_MAPS_API_KEY,
+        "coords": settings.STUDIO_COORDINATES
+    }
+    return render(request, "main/contact.html", context=data)
 
 
 def show_movie(request, movie_slug):
@@ -112,3 +122,17 @@ class UpdatePage(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("home")
     extra_context = dict(title="Редактирование фильма")
     permission_required = "main.change_movie"
+
+class AIAssistantView(LoginRequiredMixin, FormView):
+    template_name = "main/ai_assistant.html"
+    form_class = AIAssistantForm
+    extra_context = dict(title="ИИ-Ассистент продюсера")
+
+    def form_valid(self, form):
+        prompt = form.cleaned_data["prompt"]
+        response = get_ai_response(prompt)
+        context = self.get_context_data(form=form)
+        context["ai_response"] = response
+        context["prompt"] = prompt
+        return self.render_to_response(context)
+
