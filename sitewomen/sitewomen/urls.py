@@ -27,6 +27,7 @@ admin.site.index_title = "Панель продюсера и инженера"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("main.urls")),
+    path("users/", include("users.urls", namespace="users")),
 ]
 
 if settings.DEBUG:

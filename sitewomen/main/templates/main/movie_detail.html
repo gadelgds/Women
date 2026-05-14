@@ -44,6 +44,9 @@
         {% endif %}
         
         <div class="movie-actions">
+            {% if perms.main.change_movie %}
+            <a href="#" class="btn-edit">Редактировать</a>
+            {% endif %}
             <a href="{% url 'home' %}" class="btn-back">← Вернуться к списку</a>
         </div>
     </article>

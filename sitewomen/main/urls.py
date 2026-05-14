@@ -13,5 +13,5 @@ path('cats/<int:cat_id>/', views.categories, name='cats_id'),
 path('cats/<slug:cat_slug>/', views.categories_by_slug, name='cats_slug'),
 path('archive/<year4:year>/', views.archive, name='archive_year'),
 path('login/', views.login, name='login'),
-path('add/', views.addpage, name='addpage'),
+path('add/', views.AddPage.as_view(), name='addpage'),
 ]

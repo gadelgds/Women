@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 from PIL import Image
 import os
 
@@ -55,6 +56,7 @@ class Movie(models.Model):
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='movies', verbose_name="Категория")
     tags = models.ManyToManyField('MovieTag', related_name='movies', blank=True, verbose_name="Теги")
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None, blank=True, null=True, verbose_name="Постер фильма")
+    author = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, related_name="posts", null=True, default=None, verbose_name="Автор")
     
     objects = models.Manager()  # Стандартный менеджер
     published = PublishedManager()  # Кастомный менеджер для опубликованных

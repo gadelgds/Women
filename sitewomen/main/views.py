@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, Http404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.views.generic import CreateView, UpdateView
 from main.models import Movie, Category, MovieTag
 from main.forms import AddMovieForm, UploadFileForm
 
@@ -33,6 +36,8 @@ def page_not_found(request, exception):
 def login(request):
     return HttpResponse('<h1>Страница логина</h1>')
 
+@login_required
+@permission_required(perm="main.view_movie", raise_exception=True)
 def about(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -88,25 +93,22 @@ def show_tag_postlist(request, tag_slug):
     return render(request, 'main/index.html', context=data)
 
 
-def addpage(request):
-    if request.method == 'POST':
-        form = AddMovieForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
-    else:
-        form = AddMovieForm()
-    
-    menu = [
-        {'title': 'Каталог', 'url_name': 'home'},
-        {'title': 'Тарифы', 'url_name': 'home'},
-        {'title': 'Источники', 'url_name': 'sources'},
-        {'title': 'О нас', 'url_name': 'about'},
-    ]
-    
-    data = {
-        'title': 'Добавление фильма',
-        'menu': menu,
-        'form': form
-    }
-    return render(request, 'main/addpage.html', context=data)
+class AddPage(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    form_class = AddMovieForm
+    template_name = "main/addpage.html"
+    success_url = reverse_lazy("home")
+    extra_context = dict(title="Добавление фильма")
+    permission_required = "main.add_movie"
+
+    def form_valid(self, form):
+        w = form.save(commit=False)
+        w.author = self.request.user
+        return super().form_valid(form)
+
+class UpdatePage(PermissionRequiredMixin, UpdateView):
+    model = Movie
+    form_class = AddMovieForm
+    template_name = "main/addpage.html"
+    success_url = reverse_lazy("home")
+    extra_context = dict(title="Редактирование фильма")
+    permission_required = "main.change_movie"

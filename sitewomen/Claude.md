@@ -1331,3 +1331,298 @@ STATICFILES_DIRS = [BASE_DIR / "static"]  # Путь к кастомным ст�
 |------|------------|
 | `templates/admin/base_site.html` | Кастомный шаблон админки |
 | `static/css/admin/admin.css` | Фирменные стили админки |
+
+
+---
+
+### Версия 2.2 - Система форм и загрузка изображений (Май 2026)
+
+#### Обновление модели Movie
+
+**Новое поле photo:**
+```python
+photo = models.ImageField(
+    upload_to="photos/%Y/%m/%d/",
+    default=None,
+    blank=True,
+    null=True,
+    verbose_name="Постер фильма"
+)
+```
+
+**Автоматическая оптимизация изображений:**
+```python
+def save(self, *args, **kwargs):
+    """Переопределение save для автоматического изменения размера изображения"""
+    super().save(*args, **kwargs)
+    
+    if self.photo:
+        img_path = self.photo.path
+        if os.path.exists(img_path):
+            with Image.open(img_path) as img:
+                max_size = (800, 800)
+                
+                if img.height > max_size[0] or img.width > max_size[1]:
+                    img.thumbnail(max_size, Image.Resampling.LANCZOS)
+                    img.save(img_path, optimize=True, quality=85)
+```
+
+**Преимущества:**
+- Автоматическое уменьшение до 800x800 пикселей
+- Сохранение пропорций изображения
+- Оптимизация размера файла (quality=85)
+- Экономия дискового пространства
+
+---
+
+#### Система форм (main/forms.py)
+
+**AddMovieForm (ModelForm):**
+```python
+class AddMovieForm(forms.ModelForm):
+    """Форма для добавления кинопроекта на основе ModelForm"""
+    
+    cat = forms.ModelChoiceField(
+        queryset=Category.objects.all().order_by('name'),
+        label='Категория',
+        empty_label='Выберите категорию'
+    )
+    
+    class Meta:
+        model = Movie
+        fields = ['title', 'slug', 'content', 'is_published', 'cat', 'tags', 'photo']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-input'}),
+            'content': forms.Textarea(attrs={'cols': 50, 'rows': 5}),
+        }
+    
+    def clean_title(self):
+        """Валидация заголовка - бизнес-правило FGM: не более 50 символов"""
+        title = self.cleaned_data['title']
+        if len(title) > 50:
+            raise ValidationError('Длина заголовка не должна превышать 50 символов')
+        return title
+```
+
+**UploadFileForm:**
+```python
+class UploadFileForm(forms.Form):
+    """Форма для загрузки файлов изображений"""
+    file = forms.ImageField(label='Изображение для проекта')
+```
+
+---
+
+#### Представления (main/views.py)
+
+**Функция addpage:**
+```python
+def addpage(request):
+    if request.method == 'POST':
+        form = AddMovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AddMovieForm()
+    # ...
+```
+
+**Оптимизация с select_related:**
+```python
+# index
+posts = Movie.published.select_related('cat').all()
+
+# show_category
+posts = Movie.published.select_related('cat').filter(cat_id=category.pk)
+```
+
+---
+
+#### Шаблоны форм
+
+**addpage.html:**
+```html
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    
+    {% for f in form %}
+        <p>
+            <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+            {{ f }}
+            {{ f.errors }}
+        </p>
+    {% endfor %}
+    
+    <button type="submit">Сохранить проект</button>
+</form>
+```
+
+---
+
+#### Настройка медиа-файлов (settings.py)
+
+```python
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+```
+
+**Раздача медиа (urls.py):**
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+```
+
+---
+
+#### Административная панель (admin.py)
+
+**Метод post_photo для отображения постеров:**
+```python
+@admin.register(Movie)
+class MovieAdmin(admin.ModelAdmin):
+    list_display = ("post_photo", "title", "cat", "brief_info", "time_create", "is_published")
+    fields = ("title", "slug", "cat", "content", "tags", "photo")
+    readonly_fields = ("post_photo",)
+
+    @admin.display(description="Постер")
+    def post_photo(self, obj):
+        """Отображение миниатюры постера в админ-панели"""
+        if obj.photo:
+            return mark_safe(f"<img src='{obj.photo.url}' width=50>")
+        return "Нет постера"
+```
+
+---
+
+#### Отображение постеров в шаблонах
+
+**index.html:**
+```html
+{% if p.photo %}
+<div class="movie-poster">
+    <img src="{{ p.photo.url }}" class="img-article-left" alt="{{ p.title }}">
+</div>
+{% endif %}
+```
+
+**movie_detail.html:**
+```html
+{% if movie.photo %}
+<div class="movie-poster">
+    <img src="{{ movie.photo.url }}" class="img-article-left" alt="{{ movie.title }}">
+</div>
+{% endif %}
+```
+
+---
+
+#### Миграции (продолжение)
+
+| Миграция | Описание |
+|----------|----------|
+| 0011_movie_photo.py | Добавление поля photo в модель Movie |
+
+---
+
+#### Зависимости
+
+```txt
+Django==5.2.8
+django-extensions==4.1
+django-debug-toolbar==4.4.6
+pillow==12.2.0
+```
+
+---
+
+#### Реализованные ТЗ
+
+| Номер | Описание |
+|-------|----------|
+| FGM-43 | Базовый механизм добавления кинопроектов через HTML-формы |
+| FGM-44 | Архитектура форм с использованием Django Form |
+| FGM-45 | Профессиональное отображение формы и сохранение данных |
+| FGM-46 | Многоуровневая система валидации |
+| FGM-47 | Оптимизация архитектуры через ModelForm |
+| FGM-48 | Механизм загрузки технических файлов |
+| FGM-49 | Автоматизированная система загрузки постеров |
+| FGM-50 | Визуальное отображение постеров в UI и админ-панели |
+| FGM-51 | Автоматическая оптимизация изображений при сохранении |
+
+---
+
+#### Структура проекта (обновлено)
+
+```
+sitewomen/
+├── media/                        # Загруженные медиа-файлы
+│   └── photos/                   # Постеры фильмов
+│       └── YYYY/MM/DD/           # Организация по дате
+├── main/
+│   ├── forms.py                  # Формы (AddMovieForm, UploadFileForm)
+│   ├── models.py                 # Модели с оптимизацией изображений
+│   ├── views.py                  # Представления с select_related
+│   └── templates/main/
+│       ├── addpage.html          # Форма добавления фильма
+│       ├── index.html            # Каталог с постерами
+│       └── movie_detail.html     # Страница фильма с постером
+└── templates/admin/
+    └── base_site.html            # Кастомная админка
+```
+
+---
+
+## Заключение (обновлено)
+
+FGM - это современное Django-приложение для управления кинопроизводством с развитой системой категоризации, тегирования и управления медиа-контентом. Проект использует лучшие практики Django:
+
+✅ **Модульная архитектура** - четкое разделение моделей, представлений и шаблонов  
+✅ **Кастомные менеджеры** - инкапсуляция бизнес-логики  
+✅ **Защита данных** - PROTECT для критичных связей  
+✅ **ManyToMany связи** - гибкая система тегирования  
+✅ **Динамические меню** - автоматическое обновление из БД  
+✅ **Оптимизация запросов** - select_related, prefetch_related  
+✅ **SEO-оптимизация** - понятные URL и семантическая разметка  
+✅ **Переиспользование кода** - DRY принцип  
+✅ **ModelForm** - автоматическая генерация форм из моделей  
+✅ **Валидация данных** - многоуровневая система проверки  
+✅ **Медиа-файлы** - загрузка и оптимизация изображений  
+✅ **Админ-панель** - кастомизация с отображением постеров  
+
+Проект готов к дальнейшему развитию и масштабированию! 🎬
+
+---
+
+### Версия 2.3 - Кастомная модель пользователя и настройки SMTP
+
+#### Модель пользователя
+- Создана кастомная модель `User` в `users.models`, наследующая `AbstractUser`.
+- Добавлены новые поля: `photo` (Фотография профиля) и `date_birth` (Дата рождения).
+- В `settings.py` определен `AUTH_USER_MODEL = "users.User"`.
+- В `settings.py` установлен `DEFAULT_USER_IMAGE = MEDIA_URL + "users/default.png"`.
+
+#### Формы и шаблоны
+- Обновлена `ProfileUserForm` с использованием `get_user_model()`. Добавлены поля `photo` и `date_birth` (с использованием `SelectDateWidget`).
+- В шаблоне `profile.html` добавлено отображение фотографии и атрибут `enctype="multipart/form-data"` для загрузки файлов.
+- Представление `ProfileUser` передает `default_image` в контекст.
+
+#### Настройки SMTP (Яндекс)
+- В `settings.py` настроен почтовый бэкенд для использования SMTP-сервера Яндекса (`smtp.yandex.ru`, порт 465, SSL включен).
+
+---
+
+### Версия 2.4 - Разграничение прав доступа (Permissions)
+
+#### Представления (Views)
+- Для классовых представлений (`AddPage`, `UpdatePage`) добавлен миксин `PermissionRequiredMixin`.
+- Установлены права `permission_required = "main.add_movie"` для `AddPage` и `permission_required = "main.change_movie"` для `UpdatePage`.
+- Функция `about` (FBV) защищена декоратором `@permission_required(perm="main.view_movie", raise_exception=True)`, генерирующим 403 ошибку при отсутствии прав.
+
+#### Шаблоны
+- В `movie_detail.html` реализована проверка прав доступа через коллекцию `perms`. Ссылка на редактирование оборачивается в условие `{% if perms.main.change_movie %}`.
+

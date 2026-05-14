@@ -35,6 +35,7 @@
         {% endif %}
         <p class="category-badge">Категория: {{ p.cat.name }}</p>
         <p class="movie-updated">Обновлено: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
+        <p class="movie-author">Автор: {{ p.author.username|default:"неизвестен" }}</p>
         <h2 class="text-wrapper-18">{{ p.title }}</h2>
         {% with p.tags.all as tags %}
           {% if tags %}
