@@ -2789,6 +2789,7 @@ html {
 .modern-form input[type="email"],
 .modern-form input[type="password"],
 .modern-form input[type="file"],
+.modern-form select,
 .modern-form textarea {
   width: 100%;
   padding: 14px;
@@ -2802,6 +2803,7 @@ html {
 }
 
 .modern-form input:focus,
+.modern-form select:focus,
 .modern-form textarea:focus {
   outline: none;
   border-color: #2543cf;

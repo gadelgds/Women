@@ -52,7 +52,7 @@ class Movie(models.Model):
     content = models.TextField(blank=True, verbose_name="Синопсис/Описание")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     time_update = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    is_published = models.BooleanField(default=Status.PUBLISHED, choices=Status.choices, verbose_name="Статус")
+    is_published = models.IntegerField(default=Status.PUBLISHED, choices=Status.choices, verbose_name="Статус")
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='movies', verbose_name="Категория")
     tags = models.ManyToManyField('MovieTag', related_name='movies', blank=True, verbose_name="Теги")
     photo = models.ImageField(upload_to="photos/%Y/%m/%d/", default=None, blank=True, null=True, verbose_name="Постер фильма")
@@ -65,10 +65,20 @@ class Movie(models.Model):
         return self.title
 
     def get_absolute_url(self):
+        if not self.slug:
+            return "#"
         return reverse('movie_detail', kwargs={'movie_slug': self.slug})
 
     def save(self, *args, **kwargs):
-        """Переопределение save для автоматического изменения размера изображения"""
+        """Переопределение save для автоматического генерации slug и изменения размера изображения"""
+        if not self.slug:
+            from django.utils.text import slugify
+            import uuid
+            base_slug = slugify(self.title, allow_unicode=True)
+            if not base_slug:
+                base_slug = f"movie-{uuid.uuid4().hex[:8]}"
+            self.slug = base_slug
+
         super().save(*args, **kwargs)
         
         if self.photo:

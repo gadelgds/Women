@@ -1,22 +1,36 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="addpage-container">
-    <h1>Добавление кинопроекта</h1>
-    
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        
-        {% for f in form %}
-            <p>
-                <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
-                {{ f }}
-                {{ f.errors }}
-            </p>
-        {% endfor %}
-        
-        <button type="submit">Сохранить проект</button>
-    </form>
-</div>
+<section class="profile-section">
+    <div class="profile-content" style="max-width: 800px; margin: 0 auto;">
+        <div class="profile-header">
+            <h1>Добавление кинопроекта</h1>
+            <p class="profile-subtitle">Заполните форму ниже, чтобы добавить новый проект в базу FGM.</p>
+        </div>
+
+        <div class="profile-form-container">
+            <form action="" method="post" enctype="multipart/form-data" class="modern-form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-grid">
+                    {% for f in form %}
+                        <div class="form-group">
+                            <label class="modern-form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                            {{ f }}
+                            {% if f.errors %}
+                            <div class="modern-form-error">{{ f.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="profile-actions" style="margin-top: 30px;">
+                    <button type="submit" class="btn-submit">Сохранить проект</button>
+                    <a href="{% url 'home' %}" class="btn-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock %}

@@ -10,3 +10,8 @@
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static 'css/admin/admin.css' %}">
 {% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <link rel="icon" type="image/svg+xml" href="{% static 'main/img/Logo.svg' %}">
+{% endblock %}
