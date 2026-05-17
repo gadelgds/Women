@@ -2,32 +2,42 @@
 
 {% block content %}
 <section class="ai-assistant-section">
-    <h1>{{ title }}</h1>
-    <div class="form-container">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            {% for f in form %}
-                <p>
-                    <label for="{{ f.id_for_label }}" class="form-label">{{ f.label }}</label>
-                    {{ f }}
-                    {{ f.errors }}
-                </p>
-            {% endfor %}
-            <button type="submit" class="btn">Спросить ИИ</button>
-        </form>
-    </div>
-
-    {% if ai_response %}
-    <div class="ai-response-container" style="margin-top: 30px;">
-        <h2>Ответ ассистента:</h2>
-        <div class="user-prompt" style="font-style: italic; color: #666; margin-bottom: 10px;">
-            Вы спросили: "{{ prompt }}"
+    <div class="ai-content">
+        <div class="ai-header">
+            <h1>{{ title }}</h1>
+            <p class="ai-subtitle">Задайте вопрос нашему ИИ-ассистенту о кинопроизводстве, съемочных процессах или функционале платформы FGM.</p>
         </div>
-        <blockquote class="ai-response" style="background-color: #f9f9f9; border-left: 5px solid #4CAF50; padding: 15px; border-radius: 5px; white-space: pre-wrap;">
-            {{ ai_response }}
-        </blockquote>
+
+        <div class="ai-layout">
+            <div class="ai-form-container">
+                <form method="post" class="ai-form">
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    {% for f in form %}
+                        <div class="form-group">
+                            <label for="{{ f.id_for_label }}" class="ai-form-label">{{ f.label }}</label>
+                            {{ f }}
+                            {% if f.errors %}
+                            <div class="ai-form-error">{{ f.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn-submit">Спросить ИИ</button>
+                </form>
+            </div>
+
+            {% if ai_response %}
+            <div class="ai-response-container">
+                <h3>Ответ ассистента</h3>
+                <div class="user-prompt">
+                    <strong>Ваш запрос:</strong> "{{ prompt }}"
+                </div>
+                <blockquote class="ai-response-box">
+                    {{ ai_response }}
+                </blockquote>
+            </div>
+            {% endif %}
+        </div>
     </div>
-    {% endif %}
 </section>
 {% endblock %}

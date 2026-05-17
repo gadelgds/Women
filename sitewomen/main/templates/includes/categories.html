@@ -1,12 +1,17 @@
-<nav class="categories-menu" aria-label="Меню категорий">
+<aside class="categories-sidebar">
+  <h3 class="categories-title">Категории фильмов</h3>
   <ul class="categories-list">
-    <li class="category-item {% if cat_selected == 0 %}active{% endif %}">
-      <a href="{% url 'home' %}">Все категории</a>
+    <li class="category-item {% if cat_selected == 0 %}selected{% endif %}">
+      <a href="{% url 'home' %}" class="category-link">Все категории</a>
     </li>
     {% for cat in cats %}
-    <li class="category-item {% if cat.pk == cat_selected %}active{% endif %}">
-      <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+    <li class="category-item {% if cat.pk == cat_selected %}selected{% endif %}">
+      {% if cat.pk == cat_selected %}
+      <span class="category-link">{{ cat.name }}</span>
+      {% else %}
+      <a href="{{ cat.get_absolute_url }}" class="category-link">{{ cat.name }}</a>
+      {% endif %}
     </li>
     {% endfor %}
   </ul>
-</nav>
+</aside>
