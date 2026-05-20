@@ -168,4 +168,4 @@ STUDIO_COORDINATES = [55.753215, 37.622504]
 
 
 OPENROUTER_API_KEY = "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"
-OPENROUTER_MODEL = "deepseek/deepseek-v4-flash:free" 
+OPENROUTER_MODEL = "baidu/cobuddy:free" 
