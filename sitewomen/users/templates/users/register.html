@@ -1,19 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="login-form">
-    <h1>Регистрация</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for f in form %}
-            <p>
-                <label for="{{ f.id_for_label }}">{{ f.label }}</label>
-                {{ f }}
-                {{ f.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Регистрация</button>
-    </form>
-</div>
+<section class="profile-section">
+    <div class="profile-content" style="max-width: 520px; margin: 0 auto;">
+        <div class="profile-header">
+            <h1>Регистрация</h1>
+            <p class="profile-subtitle">Создайте аккаунт для доступа к FGM Production Hub</p>
+        </div>
+
+        <div class="profile-form-container">
+            <form class="modern-form" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <div class="auth-non-field-errors">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                <div class="form-grid">
+                    {% for f in form %}
+                    <div class="form-group">
+                        <label class="modern-form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                        {{ f }}
+                        {% if f.errors %}
+                        <div class="modern-form-error">{{ f.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="profile-actions">
+                    <button type="submit" class="btn-submit" style="flex: 1;">Создать аккаунт</button>
+                </div>
+            </form>
+            <p class="auth-footer-link">Уже есть аккаунт? <a href="{% url 'users:login' %}">Войти</a></p>
+        </div>
+    </div>
+</section>
 {% endblock %}

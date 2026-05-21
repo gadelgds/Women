@@ -1,21 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="login-form">
-    <h1>Авторизация</h1>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}" />
-        {{ form.non_field_errors }}
-        {% for f in form %}
-            <p>
-                <label for="{{ f.id_for_label }}">{{ f.label }}</label>
-                {{ f }}
-                {{ f.errors }}
-            </p>
-        {% endfor %}
-        <button type="submit">Войти</button>
-    </form>
-    <p><a href="{% url 'users:password_reset' %}">Забыли пароль?</a></p>
-</div>
+<section class="profile-section">
+    <div class="profile-content" style="max-width: 520px; margin: 0 auto;">
+        <div class="profile-header">
+            <h1>Авторизация</h1>
+            <p class="profile-subtitle">Войдите в свой аккаунт FGM Production Hub</p>
+        </div>
+
+        <div class="profile-form-container">
+            <form class="modern-form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}" />
+                {% if form.non_field_errors %}
+                <div class="auth-non-field-errors">
+                    {{ form.non_field_errors }}
+                </div>
+                {% endif %}
+                <div class="form-grid">
+                    {% for f in form %}
+                    <div class="form-group">
+                        <label class="modern-form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+                        {{ f }}
+                        {% if f.errors %}
+                        <div class="modern-form-error">{{ f.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="profile-actions">
+                    <button type="submit" class="btn-submit" style="flex: 1;">Войти</button>
+                    <a href="{% url 'users:password_reset' %}" class="btn-secondary">Забыли пароль?</a>
+                </div>
+            </form>
+            <p class="auth-footer-link">Нет аккаунта? <a href="{% url 'users:register' %}">Зарегистрироваться</a></p>
+        </div>
+    </div>
+</section>
 {% endblock %}
