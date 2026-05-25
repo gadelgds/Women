@@ -56,7 +56,7 @@ html {
 .navbar {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
   margin: 0 auto;
 }
 
@@ -65,11 +65,12 @@ html {
   font-family: "Montserrat", Helvetica, sans-serif;
   font-weight: 400;
   color: #ffffff;
-  font-size: 24px;
-  letter-spacing: 2.88px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
   line-height: normal;
   text-decoration: none;
   transition: opacity 0.2s ease;
+  white-space: nowrap;
 }
 
 .navbar .div:hover,
@@ -81,30 +82,34 @@ html {
   font-family: "Montserrat", Helvetica, sans-serif;
   font-weight: 400;
   color: #ffffff;
-  font-size: 24px;
-  letter-spacing: 2.88px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
   line-height: normal;
   text-decoration: none;
-  margin-right: 30px;
+  margin-right: 16px;
+  white-space: nowrap;
 }
 
 .rectangle-2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 224px;
-  height: 53px;
+  width: auto;
+  height: auto;
+  padding: 8px 20px;
   border: 1px solid #ffffff;
+  white-space: nowrap;
 }
 
 .text-wrapper-3 {
   font-family: "Montserrat", Helvetica, sans-serif;
   font-weight: 400;
   color: #ffffff;
-  font-size: 24px;
-  letter-spacing: 2.88px;
+  font-size: 16px;
+  letter-spacing: 0.5px;
   line-height: normal;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 /* ========================================

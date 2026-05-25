@@ -38,19 +38,9 @@ def page_not_found(request, exception):
 def login(request):
     return HttpResponse('<h1>Страница логина</h1>')
 
-@login_required
-@permission_required(perm="main.view_movie", raise_exception=True)
 def about(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            handle_uploaded_file(form.cleaned_data['file'])
-    else:
-        form = UploadFileForm()
-    
     data = {
         'title': 'О нас — FGM',
-        'form': form
     }
     return render(request, 'main/about.html', context=data)
 
